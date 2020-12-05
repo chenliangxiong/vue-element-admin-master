@@ -1,83 +1,94 @@
 <template>
-  <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
-
-      <div class="title-container">
-        <h3 class="title">人力资源管理系统</h3>
+  <div>
+    <el-dialog title="检测到你登录账号的权限比较高，请进行邮箱验证" :visible.sync="dialogFormVisible">
+      <el-form :model="form">
+        <el-input v-model="form.emailCode" placeholder="请输入验证码" class="input-with-select">
+          <el-button slot="append" @click.native.prevent="sendEmail">发送</el-button>
+        </el-input>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="chackLoginCode">确 定</el-button>
       </div>
+    </el-dialog>
+    <div class="login-container">
 
-      <el-form-item prop="name">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="name"
-          v-model="loginForm.name"
-          placeholder="请输入用户名"
-          name="name"
-          type="text"
-          tabindex="1"
-          autocomplete="on"
-        />
-      </el-form-item>
+      <!-- <el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button> -->
 
-      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
-        <el-form-item prop="password">
+      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
+
+        <div class="title-container">
+          <h3 class="title">人力资源管理系统</h3>
+        </div>
+
+        <el-form-item prop="work_num">
           <span class="svg-container">
-            <svg-icon icon-class="password" />
+            <svg-icon icon-class="user" />
           </span>
           <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            placeholder="请输入密码"
-            name="password"
-            tabindex="2"
+            ref="work_num"
+            v-model="loginForm.work_num"
+            placeholder="请输入工号"
+            name="work_num"
+            type="text"
+            tabindex="1"
             autocomplete="on"
-            @keyup.native="checkCapslock"
-            @blur="capsTooltip = false"
-            @keyup.enter.native="handleLogin"
           />
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-          </span>
         </el-form-item>
-      </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+        <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+          <el-form-item prop="password">
+            <span class="svg-container">
+              <svg-icon icon-class="password" />
+            </span>
+            <el-input
+              :key="passwordType"
+              ref="password"
+              v-model="loginForm.password"
+              :type="passwordType"
+              placeholder="请输入密码"
+              name="password"
+              tabindex="2"
+              autocomplete="on"
+              @keyup.native="checkCapslock"
+              @blur="capsTooltip = false"
+              @keyup.enter.native="handleLogin"
+            />
+            <span class="show-pwd" @click="showPwd">
+              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            </span>
+          </el-form-item>
+        </el-tooltip>
 
-      <!-- <div style="position:relative">
-        //提示密码，以及第三方登录
-        <div class="tips">
-          <span>Username : admin</span>
-          <span>Password : any</span>
+        <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+
+        <div style="position:relative">
+          <div class="tips">
+            <span style="margin-right:18px;">还没有注册？
+              <router-link style="color:yellow" :to="`/register`">点击注册</router-link>
+            </span>
+          </div>
+
+          <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
+            第三方登录
+          </el-button>
         </div>
-        <div class="tips">
-          <span style="margin-right:18px;">Username : editor</span>
-          <span>Password : any</span>
-        </div>
+      </el-form>
 
-        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
-          Or connect with
-        </el-button>
-      </div> -->
-    </el-form>
-
-    <el-dialog title="Or connect with" :visible.sync="showDialog">
-      Can not be simulated on local, so please combine you own business simulation! ! !
-      <br>
-      <br>
-      <br>
-      <social-sign />
-    </el-dialog>
+      <el-dialog title="Or connect with" :visible.sync="showDialog">
+        <social-sign />
+      </el-dialog>
+    </div>
   </div>
+
 </template>
 
 <script>
 // import { validUsername } from '@/utils/validate'
 // SocialSign 社交组件
+import { sendLoginCode } from '@/api/user'
 import SocialSign from './components/SocialSignin'
+// import { getToken, setToken, removeToken, setWorkNum } from '@/utils/auth'
 
 export default {
   name: 'Login',
@@ -102,8 +113,12 @@ export default {
     }
     // 传值（loginForm,loginRules,passwordType,capsTooltip,loading,showDialog,redirect,otherQuery)
     return {
+      dialogFormVisible: false,
+      form: {
+        emailCode: ''
+      },
       loginForm: {
-        name: 'SuperAdmin',
+        work_num: '2017107203',
         password: '111111'
       },
       loginRules: {
@@ -159,6 +174,45 @@ export default {
         this.$refs.password.focus()
       })
     },
+    sendEmail() {
+      return new Promise((resolve, reject) => {
+        sendLoginCode({ work_num: this.loginForm.work_num })
+          .then(response => {
+            this.$notify({
+              title: '成功',
+              message: '发送成功',
+              type: 'success'
+            })
+            resolve()
+          })
+          .catch(error => {
+            console.log('发送失败')
+            reject(error)
+          })
+      })
+    },
+
+    chackLoginCode() {
+      // console.log(JSON.stringify(this.loginForm))
+      // this.$store.dispatch含有异步操作，例如向后台提交数据       第一步把值传给store里的login函数
+      this.$store.dispatch('user/checkLoginCode', { code: this.form.emailCode, work_num: this.loginForm.work_num })
+        .then((res) => {
+          console.log(res)
+          if (res === false) {
+            console.log('slkdfjl')
+          }
+
+          // 第三步！！
+          this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+        })
+        .catch(() => {
+          this.$notify.error({
+            title: '错误',
+            message: '这是一条错误的提示消息'
+          })
+        })
+    },
+
     handleLogin() {
       // console.log(JSON.stringify(this.loginForm))
 
@@ -170,14 +224,24 @@ export default {
           this.loading = true
           // this.$store.dispatch含有异步操作，例如向后台提交数据       第一步把值传给store里的login函数
           this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              // 第三步！！
+            .then((res) => {
+              console.log(res)
+              if (res === false) {
+                console.log('slkdfjl')
+              }
 
+              // 第三步！！
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
             })
-            .catch(() => {
-              console.log('运行到这里')
+            .catch((error) => {
+              if (error === 'isAdmin') {
+                this.dialogFormVisible = true
+                this.loading = false
+
+                return false
+              }
+              console.log('在第三步失败', error)
               this.loading = false
             })
         } else {
@@ -243,9 +307,9 @@ $cursor: #fff;
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: $light_gray;
+      // color: $light_gray;
       height: 47px;
-      caret-color: $cursor;
+      // caret-color: $cursor;
 
       &:-webkit-autofill {
         box-shadow: 0 0 0px 1000px $bg inset !important;
@@ -260,6 +324,7 @@ $cursor: #fff;
     border-radius: 5px;
     color: #454545;
   }
+
 }
 </style>
 
@@ -276,6 +341,7 @@ $light_gray:#eee;
 
   .login-form {
     position: relative;
+    height: 600px;
     width: 520px;
     max-width: 100%;
     padding: 160px 35px 0;
@@ -337,4 +403,5 @@ $light_gray:#eee;
     }
   }
 }
+
 </style>

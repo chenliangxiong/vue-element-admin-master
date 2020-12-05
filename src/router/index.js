@@ -7,10 +7,10 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
-import nestedRouter from './modules/nested'
+// import componentsRouter from './modules/components'
+// import chartsRouter from './modules/charts'
+// import tableRouter from './modules/table'
+// import nestedRouter from './modules/nested'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -65,16 +65,16 @@ export const constantRoutes = [
     component: () => import('@/views/login/auth-redirect'),
     hidden: true
   },
-  // {
-  //   path: '/404',
-  //   component: () => import('@/views/error-page/404'),
-  //   hidden: true
-  // },
-  // {
-  //   path: '/401',
-  //   component: () => import('@/views/error-page/401'),
-  //   hidden: true
-  // },
+  {
+    path: '/404',
+    component: () => import('@/views/error-page/404'),
+    hidden: true
+  },
+  {
+    path: '/401',
+    component: () => import('@/views/error-page/401'),
+    hidden: true
+  },
   {
     path: '/',
     component: Layout,
@@ -131,7 +131,7 @@ export const asyncRoutes = [
     meta: {
       title: 'Permission',
       icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
+      roles: ['1', '2'] // you can set roles in root nav
     },
     children: [
       {
@@ -178,10 +178,10 @@ export const asyncRoutes = [
   // },
 
   /** when your routing map is too long, you can split it into small modules **/
-  componentsRouter,
-  chartsRouter,
-  nestedRouter,
-  tableRouter,
+  // componentsRouter,
+  // chartsRouter,
+  // nestedRouter,
+  // tableRouter,
 
   // {
   //   path: '/example',
@@ -227,44 +227,61 @@ export const asyncRoutes = [
   //     }
   //   ]
   // },
-
-  // {
-  //   path: '/error',
-  //   component: Layout,
-  //   redirect: 'noRedirect',
-  //   name: 'ErrorPages',
-  //   meta: {
-  //     title: 'Error Pages',
-  //     icon: '404'
-  //   },
-  //   children: [
-  //     {
-  //       path: '401',
-  //       component: () => import('@/views/error-page/401'),
-  //       name: 'Page401',
-  //       meta: { title: '401', noCache: true }
-  //     },
-  //     {
-  //       path: '404',
-  //       component: () => import('@/views/error-page/404'),
-  //       name: 'Page404',
-  //       meta: { title: '404', noCache: true }
-  //     }
-  //   ]
-  // },
+  // 查看员工信息
 
   {
-    path: '/error-log',
+    path: '/users',
     component: Layout,
+    redirect: '/users/index',
     children: [
       {
-        path: 'log',
-        component: () => import('@/views/error-log/index'),
-        name: 'ErrorLog',
-        meta: { title: 'Error Log', icon: 'bug' }
+        path: 'users',
+        component: () => import('@/views/users/index'),
+        name: 'users',
+        meta: {
+          title: '员工信息表',
+          icon: 'peoples'
+        }
       }
     ]
   },
+  {
+    path: '/error',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'ErrorPages',
+    meta: {
+      title: '访问错误页面',
+      icon: '404'
+    },
+    children: [
+      {
+        path: '401',
+        component: () => import('@/views/error-page/401'),
+        name: 'Page401',
+        meta: { title: '401', noCache: true }
+      },
+      {
+        path: '404',
+        component: () => import('@/views/error-page/404'),
+        name: 'Page404',
+        meta: { title: '404', noCache: true }
+      }
+    ]
+  },
+
+  // {
+  //   path: '/error-log',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'log',
+  //       component: () => import('@/views/error-log/index'),
+  //       name: 'ErrorLog',
+  //       meta: { title: 'Error Log', icon: 'bug' }
+  //     }
+  //   ]
+  // },
 
   // {
   //   path: '/excel',
@@ -302,25 +319,6 @@ export const asyncRoutes = [
   //     }
   //   ]
   // },
-
-  // 查看员工信息
-
-  {
-    path: '/users',
-    component: Layout,
-    redirect: '/users/index',
-    children: [
-      {
-        path: 'users',
-        component: () => import('@/views/users/index'),
-        name: 'users',
-        meta: {
-          title: '员工信息表',
-          icon: 'peoples'
-        }
-      }
-    ]
-  },
 
   // {
   //   path: '/zip',

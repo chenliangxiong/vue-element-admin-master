@@ -8,7 +8,8 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
+// 重要：白名单
+const whiteList = ['/login', '/register', '/auth-redirect'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -18,16 +19,21 @@ router.beforeEach(async(to, from, next) => {
   document.title = getPageTitle(to.meta.title)
 
   // determine whether the user has logged in
+
   const hasToken = getToken()
 
   if (hasToken) {
     if (to.path === '/login') {
+      // console.log(31253546)
       // if is logged in, redirect to the home page
       next({ path: '/' })
       NProgress.done() // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
     } else {
+      // console.log(31253546)
+
       // determine whether the user has obtained his permission roles through getInfo
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
+
       // console.log(store.getters.roles)
 
       if (hasRoles) {
@@ -37,6 +43,8 @@ router.beforeEach(async(to, from, next) => {
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
           // 获取info的地方
+          // console.log(1232143254354365436)
+
           const { roles } = await store.dispatch('user/getInfo')
 
           // generate accessible routes map based on roles

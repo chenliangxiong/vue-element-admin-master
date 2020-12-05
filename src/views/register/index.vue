@@ -1,72 +1,150 @@
 <template>
-  <div>
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="活动名称">
-        <el-input v-model="form.name">你好</el-input>
-      </el-form-item>
-      <el-form-item label="活动区域">
-        <el-select v-model="form.region" placeholder="请选择活动区域">
-          <el-option label="区域一" value="shanghai">你好</el-option>
-          <el-option label="区域二" value="beijing">你好</el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="活动时间">
-        <el-col :span="11">
-          <el-date-picker type="date" placeholder="选择日期" style="width: 100%;">你好</el-date-picker>
-        </el-col>
-        <el-col class="line" :span="2">-</el-col>
-        <el-col :span="11">
-          <el-time-picker placeholder="选择时间" style="width: 100%;">你好</el-time-picker>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="即时配送">
-        <el-switch v-model="form.delivery">你好</el-switch>
-      </el-form-item>
-      <el-form-item label="活动性质">
-        <el-checkbox-group v-model="form.type">
-          <el-checkbox label="美食/餐厅线上活动" name="type">你好</el-checkbox>
-          <el-checkbox label="地推活动" name="type">你好</el-checkbox>
-          <el-checkbox label="线下主题活动" name="type">你好</el-checkbox>
-          <el-checkbox label="单纯品牌曝光" name="type">你好</el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="特殊资源">
-        <el-radio-group v-model="form.resource">
-          <el-radio label="线上品牌商赞助">你好</el-radio>
-          <el-radio label="线下场地免费">你好</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="活动形式">
-        <el-input type="textarea">你好</el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
-        <el-button>取消</el-button>
-      </el-form-item>
-    </el-form>
+  <div class="top">
+    <el-card class="box-card">
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="registerRules"
+        label-width="80px"
+      >
+        <el-row>
+          <el-col :span="12">
+            <el-form-item aria-label="" label="工号">
+              <el-input v-model="form.job_num" name="job_num">你好</el-input>
+            </el-form-item></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item aria-label="" label="姓名">
+              <el-input v-model="form.name">你好</el-input>
+            </el-form-item></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="年龄">
+              <el-input v-model="form.age">你好</el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="性别">
+              <el-select v-model="form.sex" placeholder="男">
+                <el-option label="男" value="shanghai">男</el-option>
+                <el-option label="女" value="beijing">女</el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="部门">
+          <el-select v-model="form.department" placeholder="请选择所在部门">
+            <el-option label="区域一" value="shanghai">你好</el-option>
+            <el-option label="区域二" value="beijing">你好</el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="职位">
+          <el-select v-model="form.position" placeholder="请选择你的职位">
+            <el-option label="区域一" value="shanghai">你好</el-option>
+            <el-option label="区域二" value="beijing">你好</el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="简介">
+          <el-input
+            v-model="form.introduction"
+            type="textarea"
+            placeholder="你好，我是"
+          >1</el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="primary"
+            @click.native.prevent="handleRegister"
+          >注册</el-button>
+          <el-button>取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
   </div>
 </template>
 
 <script>
+import { register } from '@/api/user'
+
 export default {
   data() {
+    const validateJobNum = (rule, value, callback) => {
+      if (value.length !== 10) {
+        callback(new Error('工号必须是十位'))
+      } else {
+        callback()
+      }
+    }
     return {
       form: {
+        job_num: '',
         name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        age: '',
+        sex: '',
+        position: '',
+        department: '',
+        introduction: ''
+      },
+      registerRules: {
+        job_num: [{ required: true, trigger: 'blur', validator: validateJobNum }]
       }
     }
   },
   methods: {
-    onSubmit() {
-      console.log('submit!')
+    handleRegister() {
+    // console.log(JSON.stringify(this.loginForm))
+      this.$refs.form.validate(valid => {
+      // console.log(JSON.stringify(this.valid))
+        if (valid) {
+          register({ form: this.form }).then(response => {
+            console.log('注册成功')
+            // data是利用api从后端获取的数据
+            // 从response中拿到data
+            // const { data } = response
+            // commit('SET_TOKEN', data.token)
+            // setToken(data.token)
+            // // console.log(data.token)
+            // // console.log(data.roles)
+
+            // resolve()
+          }).catch(error => {
+            console.log('没拿到response')
+            console.log(error)
+          })
+        // console.log(JSON.stringify(this.loginForm))
+          // this.loading = true
+          // this.$store.dispatch含有异步操作，例如向后台提交数据       第一步把值传给store里的login函数
+          // this.$store.dispatch('user/register', this.form)
+          //   .then(() => {
+          //   // 第三步！！
+          //     this.$router.push('/login')
+          //     this.loading = false
+          //   })
+          //   .catch(() => {
+          //     console.log('运行到这里')
+          //     this.loading = false
+          //   })
+        } else {
+          console.log('错误提交!!')
+          return false
+        }
+      })
     }
   }
 }
 </script>
+
+<style lang="scss">
+.top {
+  padding: 30px;
+}
+.box-card {
+  width: 480px;
+  margin: 0 auto;
+}
+</style>
