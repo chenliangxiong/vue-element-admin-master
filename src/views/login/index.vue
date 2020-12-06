@@ -201,14 +201,13 @@ export default {
           if (res === false) {
             console.log('slkdfjl')
           }
-
           // 第三步！！
           this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
         })
         .catch(() => {
           this.$notify.error({
             title: '错误',
-            message: '这是一条错误的提示消息'
+            message: '验证码错误'
           })
         })
     },
@@ -235,6 +234,13 @@ export default {
               this.loading = false
             })
             .catch((error) => {
+              if (error === 'noAccount') {
+                this.$notify.error({
+                  title: '错误',
+                  message: '账户未激活或者已锁定'
+                })
+                return false
+              }
               if (error === 'isAdmin') {
                 this.dialogFormVisible = true
                 this.loading = false

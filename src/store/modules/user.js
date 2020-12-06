@@ -42,8 +42,14 @@ const actions = {
           // data是利用api从后端获取的数据
           // 从response中拿到data
           const { data } = response
+          if (data.code === 2) {
+            reject('noAccount')
+          }
+
           setWorkNum(data.work_num)
-          const isAdmin = data.roles < 2
+
+          // 在这里修改验证条件
+          const isAdmin = data.roles < 1
           if (isAdmin) {
             reject('isAdmin')
           }
@@ -77,7 +83,7 @@ const actions = {
           if (!data.code) {
             reject(data.code)
           }
-          setWorkNum(data.work_num)
+          // setWorkNum(data.work_num)
           // const isAdmin = data.roles < 2
           // if (isAdmin) {
           //   reject('isAdmin')
