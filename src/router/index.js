@@ -84,7 +84,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        meta: { title: '主页', icon: 'dashboard', affix: true }
       }
     ]
   },
@@ -122,47 +122,47 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-  {
-    path: '/permission',
-    component: Layout,
-    redirect: '/permission/page',
-    alwaysShow: true, // will always show the root menu
-    name: 'Permission',
-    meta: {
-      title: 'Permission',
-      icon: 'lock',
-      roles: ['1', '2'] // you can set roles in root nav
-    },
-    children: [
-      {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
-        meta: {
-          title: 'Page Permission',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
-        meta: {
-          title: 'Directive Permission'
-          // if do not set roles, means: this page does not require permission
-        }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'RolePermission',
-        meta: {
-          title: 'Role Permission',
-          roles: ['admin']
-        }
-      }
-    ]
-  },
+  // {
+  //   path: '/permission',
+  //   component: Layout,
+  //   redirect: '/permission/page',
+  //   alwaysShow: true, // will always show the root menu
+  //   name: 'Permission',
+  //   meta: {
+  //     title: 'Permission',
+  //     icon: 'lock',
+  //     roles: ['1', '2', '3'] // you can set roles in root nav
+  //   },
+  //   children: [
+  //     {
+  //       path: 'page',
+  //       component: () => import('@/views/permission/page'),
+  //       name: 'PagePermission',
+  //       meta: {
+  //         title: 'Page Permission',
+  //         roles: ['1'] // or you can only set roles in sub nav
+  //       }
+  //     },
+  //     {
+  //       path: 'directive',
+  //       component: () => import('@/views/permission/directive'),
+  //       name: 'DirectivePermission',
+  //       meta: {
+  //         title: 'Directive Permission'
+  //         // if do not set roles, means: this page does not require permission
+  //       }
+  //     },
+  //     {
+  //       path: 'role',
+  //       component: () => import('@/views/permission/role'),
+  //       name: 'RolePermission',
+  //       meta: {
+  //         title: 'Role Permission',
+  //         roles: ['1']
+  //       }
+  //     }
+  //   ]
+  // },
 
   // {
   //   path: '/icon',
@@ -227,6 +227,146 @@ export const asyncRoutes = [
   //     }
   //   ]
   // },
+
+  // 招聘管理
+  {
+    path: '/recruit',
+    component: Layout,
+    redirect: '/recruit/index',
+    meta: {
+      title: '招聘管理',
+      icon: 'people',
+      roles: ['1']
+    },
+    children: [
+      {
+        path: 'recruit',
+        component: () => import('@/views/recruit/index'),
+        name: 'recruit',
+        meta: { title: '招聘管理', icon: 'people', roles: ['1'] }
+
+      }
+      // {
+      //   path: 'staff_recruit',
+      //   component: () => import('@/views/recruit/staff_recruit'),
+      //   name: 'recruit',
+      //   meta: { title: '招聘管理', icon: 'people', roles: ['2'] }
+      // }
+    ]
+  },
+
+  // 培训管理
+  {
+    path: '/train',
+    component: Layout,
+    redirect: '/train/index',
+    roles: ['1'],
+    meta: {
+      title: '培训管理',
+      icon: 'skill'
+    },
+    children: [
+      {
+        path: 'train',
+        component: () => import('@/views/train/index'),
+        name: 'train',
+        meta: { title: '培训管理', icon: 'skill', roles: ['1'] }
+      }
+    ]
+  },
+
+  // 绩效管理
+  {
+    path: '/achievements',
+    component: Layout,
+    redirect: '/achievements/index',
+    roles: ['1'],
+    meta: {
+      title: '绩效管理',
+      icon: 'star'
+    },
+    children: [
+      {
+        path: 'achievements',
+        component: () => import('@/views/achievements/index'),
+        name: 'achievements',
+        meta: { title: '绩效管理', icon: 'star', roles: ['1'] }
+      }
+    ]
+  },
+
+  // 薪酬管理
+  {
+    path: '/wages',
+    component: Layout,
+    redirect: '/wages/index',
+    meta: {
+      title: '薪酬管理',
+      roles: ['1', '2', '3'],
+      icon: 'money'
+    },
+    children: [
+      {
+        path: 'wages',
+        component: () => import('@/views/wages/index'),
+        name: 'wages',
+        meta: { title: '薪酬管理', icon: 'money', roles: ['1'] }
+      },
+      {
+        path: 'staffWages',
+        component: () => import('@/views/wages/staffWages'),
+        name: 'staffWages',
+        meta: { title: '工资明细', noCache: true, roles: ['2'] }
+      }
+    ]
+  },
+
+  // 部门管理
+  {
+    path: '/department',
+    roles: ['1', '2', '3'],
+    component: Layout,
+    redirect: '/department/index',
+    meta: {
+      title: '部门管理',
+      icon: 'component'
+    },
+    children: [
+      {
+        path: 'department',
+        component: () => import('@/views/department/index'),
+        name: 'department',
+        meta: { title: '部门管理', icon: 'component', roles: ['1'] }
+      }
+    ]
+  },
+
+  // 权限管理
+  {
+    path: '/jurisdiction',
+    component: Layout,
+    redirect: '/jurisdiction/index',
+    roles: ['1'],
+    meta: {
+      title: '权限管理',
+      icon: 'lock'
+    },
+    children: [
+      {
+        path: 'jurisdiction',
+        component: () => import('@/views/jurisdiction/index'),
+        name: 'jurisdiction',
+        meta: { title: '员工权限管理', roles: ['1'] }
+      }
+      // {
+      //   path: 'jurisdiction',
+      //   component: () => import('@/views/jurisdiction/index'),
+      //   name: 'jurisdiction',
+      //   meta: { title: '权限设置', roles: ['1'] }
+      // }
+    ]
+  },
+
   // 查看员工信息
 
   {
@@ -245,30 +385,30 @@ export const asyncRoutes = [
       }
     ]
   },
-  {
-    path: '/error',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'ErrorPages',
-    meta: {
-      title: '访问错误页面',
-      icon: '404'
-    },
-    children: [
-      {
-        path: '401',
-        component: () => import('@/views/error-page/401'),
-        name: 'Page401',
-        meta: { title: '401', noCache: true }
-      },
-      {
-        path: '404',
-        component: () => import('@/views/error-page/404'),
-        name: 'Page404',
-        meta: { title: '404', noCache: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/error',
+  //   component: Layout,
+  //   redirect: 'noRedirect',
+  //   name: 'ErrorPages',
+  //   meta: {
+  //     title: '访问错误页面',
+  //     icon: '404'
+  //   },
+  //   children: [
+  //     {
+  //       path: '401',
+  //       component: () => import('@/views/error-page/401'),
+  //       name: 'Page401',
+  //       meta: { title: '401', noCache: true }
+  //     },
+  //     {
+  //       path: '404',
+  //       component: () => import('@/views/error-page/404'),
+  //       name: 'Page404',
+  //       meta: { title: '404', noCache: true }
+  //     }
+  //   ]
+  // },
 
   // {
   //   path: '/error-log',

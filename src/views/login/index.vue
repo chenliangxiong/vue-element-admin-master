@@ -216,7 +216,7 @@ export default {
       // console.log(JSON.stringify(this.loginForm))
 
       this.$refs.loginForm.validate(valid => {
-        // console.log(JSON.stringify(this.valid))
+        console.log(JSON.stringify(this.valid))
 
         if (valid) {
           // console.log(JSON.stringify(this.loginForm))
