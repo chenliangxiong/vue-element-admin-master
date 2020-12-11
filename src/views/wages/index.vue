@@ -317,8 +317,10 @@ export default {
     },
     getList() {
       this.listLoading = true
+
       wagesList(this.listQuery).then(res => {
-        // console.log(this.listQuery)
+        console.log(res.data.data)
+
         res.data.data.forEach(function(e) {
           // console.log(e.total_wages)
           // console.log(e.basic_wage)

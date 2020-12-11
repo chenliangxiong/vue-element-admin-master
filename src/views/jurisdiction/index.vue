@@ -182,7 +182,7 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             修改权限
           </el-button>
-          <!-- <el-button
+          <el-button
             v-show="row.status == '已激活'"
             size="mini"
             type="success"
@@ -197,7 +197,7 @@
             @click="handleModifyStatus(row, '已激活')"
           >
             解除锁定
-          </el-button> -->
+          </el-button>
           <!-- <el-button
             size="mini"
             @click="handleModifyStatus(row, '未激活')"

@@ -8,6 +8,14 @@ export function wagesList(data) {
   })
 }
 
+export function staffWagesList(data) {
+  return request({
+    url: 'http://127.0.0.1:8000/wages/staffWagesList',
+    method: 'post',
+    data
+  })
+}
+
 export function updateRoles(data) {
   return request({
     url: 'http://127.0.0.1:8000/wages/updateroles',

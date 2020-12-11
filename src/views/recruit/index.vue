@@ -364,7 +364,7 @@ export default {
         // console.log(res.data)
         this.list = res.data.data
         this.total = res.data.total
-        console.log(res.data.total)
+        // console.log(res.data.total)
 
         // Just to simulate the time of the request
         setTimeout(() => {
@@ -381,7 +381,7 @@ export default {
       row.status = status
       console.log(row.status)
       updateStatus(row).then(() => {
-        console.log('sldfk')
+        // console.log('sldfk')
         this.getList()
         const index = this.list.findIndex(v => v.id === this.temp.id)
         this.list.splice(index, 1, this.temp)

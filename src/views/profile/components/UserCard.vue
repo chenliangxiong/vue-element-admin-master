@@ -8,7 +8,7 @@
       <div class="box-center">
         <pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false">
           <div>你好</div>
-          {{ user.role }}
+          {{ user.position }}
         </pan-thumb>
       </div>
       <div class="box-center">
@@ -22,7 +22,7 @@
         <div class="user-bio-section-header"><svg-icon icon-class="education" /><span>学历</span></div>
         <div class="user-bio-section-body">
           <div class="text-muted">
-            在河池学院读书
+            河池学院本科生
           </div>
         </div>
       </div>
@@ -65,7 +65,8 @@ export default {
           name: '',
           email: '',
           avatar: '',
-          role: ''
+          role: '',
+          position: ''
         }
       }
     }

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input
+      <!-- <el-input
         v-model="listQuery.name"
         placeholder="姓名"
         style="width: 200px;"
@@ -57,7 +57,7 @@
         @click="handleFilter"
       >
         查找
-      </el-button>
+      </el-button> -->
       <!-- <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
         添加
       </el-button> -->
@@ -133,14 +133,14 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination
+    <!-- <pagination
       v-show="total > 0"
       :page-sizes="[1,5,10, 200, 300, 400]"
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.list_rows"
       @pagination="getList"
-    />
+    /> -->
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
@@ -181,7 +181,7 @@ import { staffWagesList, updateRoles, updateWages } from '@/api/wages'
 import { fetchPv } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+// import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const calendarTypeOptions = [
   { key: '经理', display_name: '经理层' },
@@ -194,7 +194,7 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  //   components: { Pagination },
   directives: { waves },
   // 过滤器
   filters: {
@@ -294,12 +294,12 @@ export default {
     },
     getList() {
       this.listLoading = true
-      staffWagesList({ 'work_num': getWorkNum() }).then(res => {
-        res.data.data.forEach(function(e) {
-          e.total_wages = e.basic_wage + e.commission + e.subsidy - e.forfeit
-        })
-        this.list = res.data.data
-        this.total = res.data.total
+      console.log({ 'work_num': getWorkNum(), 'a ': '1' })
+      staffWagesList({ 'work_num': getWorkNum(), 'a ': '1' }).then(res => {
+        res.data.total_wages = res.data.basic_wage + res.data.commission + res.data.subsidy - res.data.forfeit
+        this.list = [res.data]
+        console.log(this.list)
+        // this.total = res.data.total_wages
         setTimeout(() => {
           this.listLoading = false
         }, 0.5 * 1000)
