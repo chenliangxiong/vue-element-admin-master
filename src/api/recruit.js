@@ -8,6 +8,14 @@ export function recruitList(data) {
   })
 }
 
+export function submit(data) {
+  return request({
+    url: 'http://127.0.0.1:8000/recruit/submit',
+    method: 'post',
+    data
+  })
+}
+
 export function updateRoles(data) {
   return request({
     url: 'http://127.0.0.1:8000/recruit/updateroles',

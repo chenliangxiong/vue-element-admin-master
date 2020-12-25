@@ -58,15 +58,9 @@
       >
         查找
       </el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="primary"
-        icon="el-icon-edit"
-        @click="handleSubmit(list)"
-      >
-        提交
-      </el-button>
+      <!-- <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+        添加
+      </el-button> -->
       <el-button
         v-waves
         :loading="downloadLoading"
@@ -98,23 +92,34 @@
       @sort-change="sortChange"
     >
       <el-table-column
-        label="ID"
-        prop="id"
+        label="工号"
+        prop="work_num"
         sortable="custom"
         align="center"
         min-width="90px"
-        :class-name="getSortClass('id')"
+        :class-name="getSortClass('work_num')"
       >
         <template slot-scope="{ row }">
-          <span>{{ row.id }}</span>
+          <span>{{ row.work_num }}</span>
         </template>
       </el-table-column>
+      <!-- <el-table-column label="Date" width="150px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        </template>
+      </el-table-column> -->
+      <!-- <el-table-column label="Title" min-width="150px">
+        <template slot-scope="{row}">
+          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
+          <el-tag>{{ row.type | typeFilter }}</el-tag>
+        </template>
+      </el-table-column> -->
       <el-table-column label="姓名" min-width="90px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="年龄" min-width="90px" align="center">
+      <!-- <el-table-column label="年龄" min-width="90px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.age }}</span>
         </template>
@@ -123,28 +128,7 @@
         <template slot-scope="{ row }">
           <span>{{ row.sex }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="身份证号" min-width="90px" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.id_num }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="学历" min-width="90px" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.education }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="简介" min-width="90px" align="center">
-        <template slot-scope="{ row }">
-          <!-- <el-input
-            v-model="row.detail"
-            size="small"
-            placeholder="请输入内容"
-            @change="handleEdit($index, row)"
-          /> -->
-          <span class="span">{{ row.detail }}</span>
-        </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="部门" min-width="90px" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.department }}</span>
@@ -155,13 +139,34 @@
           <span>{{ row.position }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" class-name="status-col" min-width="80px">
+      <el-table-column label="业绩" min-width="90px" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.achievement }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="权限" min-width="85px" align="center">
+        <template slot-scope="{ row }">
+          <svg-icon
+            v-for="n in +(6 - row.roles)"
+            :key="n"
+            icon-class="star"
+            class="meta-item__icon"
+          />
+        </template>
+      </el-table-column> -->
+      <!-- <el-table-column label="Readings" align="center" width="95">
+        <template slot-scope="{row}">
+          <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
+          <span v-else>0</span>
+        </template>
+      </el-table-column> -->
+      <!-- <el-table-column label="状态" class-name="status-col" min-width="80px">
         <template slot-scope="{ row }">
           <el-tag :type="row.status | statusFilter">
             {{ row.status }}
           </el-tag>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         v-if="showReviewer"
         label="审核人"
@@ -172,85 +177,124 @@
           <span style="color:red;">{{ row.reviewer }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         label="操作"
         align="center"
         min-width="150px"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{ row }">
-          <el-button
-            v-show="row.status == '未通过'"
-            size="mini"
-            type="success"
-            @click="handleModifyStatus(row, '已通过')"
-          >
-            允许通过
+          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+            修改权限
           </el-button>
           <el-button
-            v-show="row.status == '已通过'"
+            v-show="row.status == '已激活'"
             size="mini"
             type="success"
-            @click="handleModifyStatus(row, '未通过')"
+            @click="handleModifyStatus(row, '已锁定')"
           >
-            不予通过
+            锁定
           </el-button>
-          <!-- <el-button
+          <el-button
+            v-show="row.status == '已锁定'"
+            size="mini"
+            type="success"
+            @click="handleModifyStatus(row, '已激活')"
+          >
+            解除锁定
+          </el-button>
+          <el-button
             size="mini"
             @click="handleModifyStatus(row, '未激活')"
           >
             取消激活
-          </el-button> -->
+          </el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            删除记录
+            删除
           </el-button>
         </template>
-      </el-table-column>
-    </el-table>
-    <pagination
-      v-show="total > 0"
-      :page-sizes="[1,5,10, 200, 300, 400]"
-      :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.list_rows"
-      @pagination="getList"
-    />
+      </el-table-column> -->
+      <!-- </el-table-column></el-table> -->
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form
-        ref="dataForm"
-        :rules="rules"
-        :model="temp"
-        label-position="left"
-        label-width="70px"
-        style="width: 400px; margin-left:50px;"
-      >
-        <el-form-item label="权限">
-          <el-rate
-            v-model="temp.roles"
-            :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-            :max="5"
-            style="margin-top:8px;"
-          />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
-          取消
-        </el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus === 'create' ? createData() : updateData()"
+      <!-- 修改 -->
+
+      <pagination
+        v-show="total > 0"
+        :page-sizes="[1,5,10, 200, 300, 400]"
+        :total="total"
+        :page.sync="listQuery.page"
+        :limit.sync="listQuery.list_rows"
+        @pagination="getList"
+      />
+
+      <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+        <el-form
+          ref="dataForm"
+          :rules="rules"
+          :model="temp"
+          label-position="left"
+          label-width="70px"
+          style="width: 400px; margin-left:50px;"
         >
-          确定
-        </el-button>
-      </div>
-    </el-dialog>
-  </div>
+          <!-- <el-form-item label="Type" prop="type">
+          <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
+            <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Date" prop="timestamp">
+          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
+        </el-form-item>
+        <el-form-item label="Title" prop="title">
+          <el-input v-model="temp.title" />
+        </el-form-item>
+        <el-form-item label="Status">
+          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
+            <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
+          </el-select>
+        </el-form-item> -->
+          <el-form-item label="权限">
+            <el-rate
+              v-model="temp.roles"
+              :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
+              :max="5"
+              style="margin-top:8px;"
+            />
+          </el-form-item>
+        <!-- <el-form-item label="Remark">
+          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
+        </el-form-item> -->
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">
+            取消
+          </el-button>
+          <el-button
+            type="primary"
+            @click="dialogStatus === 'create' ? createData() : updateData()"
+          >
+            确定
+          </el-button>
+        </div>
+      </el-dialog>
+
+      <!-- reading的链接 -->
+
+      <!-- <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
+      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
+        <el-table-column prop="key" label="Channel" />
+        <el-table-column prop="pv" label="Pv" />
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
+      </span>
+    </el-dialog> -->
+      <!-- </el-table> -->
+    </el-table></div>
 </template>
 
 <script>
-import { recruitList, updateRoles, updateStatus, submit } from '@/api/recruit'
+// import { getWorkNum } from '@/utils/auth'
+import { achievementsList, updateRoles, updateStatus } from '@/api/achievements'
 import { fetchPv } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
@@ -259,7 +303,13 @@ import Pagination from '@/components/Pagination' // secondary package based on e
 const calendarTypeOptions = [
   { key: '经理', display_name: '经理层' },
   { key: '计算机部', display_name: '计算机部' }
+  // { key: 'CN', display_name: 'China' },
+  // { key: 'US', display_name: 'USA' },
+  // { key: 'JP', display_name: 'Japan' },
+  // { key: 'EU', display_name: 'Eurozone' }
 ]
+
+// arr to obj, such as { CN : "China", US : "USA" }
 const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
   acc[cur.key] = cur.display_name
   return acc
@@ -352,19 +402,18 @@ export default {
     test() {
       console.log(1234)
     },
-    handleEdit(row) {
-      console.log(row.detail)
-    },
     getList() {
       this.listLoading = true
-      recruitList(this.listQuery).then(res => {
+      achievementsList(this.listQuery).then(res => {
         // console.log(res.data[1])
         res.data.data.forEach(function(e) {
           // console.log(e.status)
           if (e.status === 1) {
-            e.status = '已通过'
+            e.status = '已激活'
+          } else if (e.status === 0) {
+            e.status = '未激活'
           } else {
-            e.status = '未通过'
+            e.status = '已锁定'
           }
         })
         // console.log(res.data)
@@ -386,19 +435,45 @@ export default {
       // row = Object.row
       row.status = status
       console.log(row.status)
+      // console.log(status)
+
+      // const tempData = Object.assign({}, this.temp)
+      // console.log(tempData)
+      // tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
       updateStatus(row).then(() => {
-        // console.log('sldfk')
+        console.log('sldfk')
         this.getList()
         const index = this.list.findIndex(v => v.id === this.temp.id)
         this.list.splice(index, 1, this.temp)
         this.dialogFormVisible = false
         this.$notify({
           title: 'Success',
-          message: '操作成功',
+          message: '修改权限成功',
           type: 'success',
           duration: 2000
         })
       })
+      // updateStatus(row).then(() => {
+      //   this.getList()
+
+      //   const index = this.list.findIndex(v => v.id === this.temp.id)
+      //   this.list.splice(index, 1, this.temp)
+      //   this.dialogFormVisible = false
+      //   this.$notify({
+      //     title: 'Success',
+      //     message: '修改权限成功',
+      //     type: 'success',
+      //     duration: 2000
+      //   })
+      // })
+
+      // this.$message({
+      //   message: '操作成功',
+      //   type: 'success'
+      // })
+      // console.log(row.status) // 0
+      // console.log(status) // 已激活
+      // row.status = status
     },
     sortChange(data) {
       const { prop, order } = data
@@ -429,30 +504,44 @@ export default {
         type: ''
       }
     },
-    handleSubmit(row) {
-      console.log(row)
-      // tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-      submit(row).then(() => {
-        this.getList()
-
-        const index = this.list.findIndex(v => v.id === this.temp.id)
-        this.list.splice(index, 1, this.temp)
-        this.dialogFormVisible = false
-        this.$notify({
-          title: 'Success',
-          message: '修改权限成功',
-          type: 'success',
-          duration: 2000
-        })
+    handleCreate() {
+      this.resetTemp()
+      this.dialogStatus = 'create'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
       })
-
-      // this.resetTemp()
-      // this.dialogStatus = 'create'
-      // this.dialogFormVisible = true
-      // this.$nextTick(() => {
-      //   this.$refs['dataForm'].clearValidate()
-      // })
     },
+    // createData() {
+    //   console.log('sdlfjsldfjslkdf')
+    //   return new Promise((resolve, reject) => {
+    //     usersList({ work_num: getWorkNum() })
+    //       .then(response => {
+    //         this.$notify({
+    //           title: '成功',
+    //           message: '发送成功',
+    //           type: 'success'
+    //         })
+    //         resolve()
+    //       })
+    //       .catch(error => {
+    //         console.log('发送失败')
+    //         reject(error)
+    //       })
+    //   })
+    // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
+    // this.temp.author = 'vue-element-admin'
+    // createArticle(this.temp).then(() => {
+    //   this.list.unshift(this.temp)
+    //   this.dialogFormVisible = false
+    //   this.$notify({
+    //     title: 'Success',
+    //     message: 'Created Successfully',
+    //     type: 'success',
+    //     duration: 2000
+    //   })
+    // })
+    // },
     handleUpdate(row) {
       // 知识点：Object.assign方法用于对象的合并，源对象的所有可枚举属性，复制到目标对象
       this.temp = Object.assign({}, row) // copy obj
@@ -509,6 +598,10 @@ export default {
         const tHeader = ['姓名']
         const filterVal = [
           'name'
+          // 'title',
+          // 'type',
+          // 'importance',
+          // 'status'
         ]
         const data = this.formatJson(filterVal)
         excel.export_json_to_excel({
@@ -537,10 +630,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-
-// .span {
-//     display: none
-// }
-
-</style>

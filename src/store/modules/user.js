@@ -5,6 +5,12 @@ import router, { resetRouter } from '@/router'
 const state = {
   token: getToken(),
   name: '',
+  work_num: '',
+  age: '',
+  sex: '',
+  position: '',
+  department: '',
+  email: '',
   avatar: '',
   introduction: '',
   roles: []
@@ -20,8 +26,29 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
+  SET_WORK_NUM: (state, work_num) => {
+    state.work_num = work_num
+  },
+  SET_AGE: (state, age) => {
+    state.age = age
+  },
+  SET_SEX: (state, sex) => {
+    state.sex = sex
+  },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_POSITION: (state, position) => {
+    state.position = position
+  },
+  SET_DEPARTMENT: (state, department) => {
+    state.department = department
+  },
+  SET_EMAIL: (state, email) => {
+    state.email = email
+  },
+  SET_CREATE_TIME: (state, create_time) => {
+    state.create_time = create_time
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
@@ -117,7 +144,7 @@ const actions = {
             reject('Verification failed, please Login again.')
           }
 
-          const { roles, name, avatar, introduction } = data
+          const { roles, name, avatar, introduction, age, sex, position, work_num, email, create_time, department } = data
 
           // roles must be a non-empty array
           if (!roles || roles.length <= 0) {
@@ -132,6 +159,13 @@ const actions = {
           commit('SET_ROLES', roles)
           commit('SET_NAME', name)
           commit('SET_AVATAR', avatar)
+          commit('SET_AGE', age)
+          commit('SET_SEX', sex)
+          commit('SET_POSITION', position)
+          commit('SET_WORK_NUM', work_num)
+          commit('SET_EMAIL', email)
+          commit('SET_CREATE_TIME', create_time)
+          commit('SET_DEPARTMENT', department)
           commit('SET_INTRODUCTION', introduction)
           resolve(data)
         })

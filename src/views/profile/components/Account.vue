@@ -20,6 +20,7 @@ export default {
       default: () => {
         return {
           name: '',
+          role: '',
           email: ''
         }
       }

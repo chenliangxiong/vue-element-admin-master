@@ -8,6 +8,14 @@ export function usersList(data) {
   })
 }
 
+export function getUser(data) {
+  return request({
+    url: 'http://127.0.0.1:8000/user/getUser',
+    method: 'post',
+    data
+  })
+}
+
 export function fetchArticle(id) {
   return request({
     url: '/vue-element-admin/article/detail',
@@ -15,6 +23,7 @@ export function fetchArticle(id) {
     params: { id }
   })
 }
+
 export function fetchPv(pv) {
   return request({
     url: '/vue-element-admin/article/pv',

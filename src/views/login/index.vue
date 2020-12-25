@@ -193,15 +193,12 @@ export default {
     },
 
     chackLoginCode() {
-      // console.log(JSON.stringify(this.loginForm))
-      // this.$store.dispatch含有异步操作，例如向后台提交数据       第一步把值传给store里的login函数
       this.$store.dispatch('user/checkLoginCode', { code: this.form.emailCode, work_num: this.loginForm.work_num })
         .then((res) => {
           console.log(res)
           if (res === false) {
             console.log('slkdfjl')
           }
-          // 第三步！！
           this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
         })
         .catch(() => {

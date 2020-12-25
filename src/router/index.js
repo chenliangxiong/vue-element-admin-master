@@ -79,6 +79,11 @@ export const constantRoutes = [
     path: '/',
     component: Layout,
     redirect: '/dashboard',
+    // meta: {
+    //   title: '主页',
+    //   icon: 'dashboard'
+    // roles: ['1', '2', '3', '4', '5']
+    // },
     children: [
       {
         path: 'dashboard',
@@ -236,15 +241,14 @@ export const asyncRoutes = [
     meta: {
       title: '招聘管理',
       icon: 'people',
-      roles: ['1']
+      roles: ['1', '2']
     },
     children: [
       {
         path: 'recruit',
         component: () => import('@/views/recruit/index'),
         name: 'recruit',
-        meta: { title: '招聘管理', icon: 'people', roles: ['1'] }
-
+        meta: { title: '招聘管理', icon: 'people', roles: ['1', '2'] }
       }
       // {
       //   path: 'staff_recruit',
@@ -256,33 +260,35 @@ export const asyncRoutes = [
   },
 
   // 培训管理
-  {
-    path: '/train',
-    component: Layout,
-    redirect: '/train/index',
-    roles: ['1'],
-    meta: {
-      title: '培训管理',
-      icon: 'skill'
-    },
-    children: [
-      {
-        path: 'train',
-        component: () => import('@/views/train/index'),
-        name: 'train',
-        meta: { title: '培训管理', icon: 'skill', roles: ['1'] }
-      }
-    ]
-  },
+  // {
+  //   path: '/train',
+  //   component: Layout,
+  //   redirect: '/train/index',
+  //   roles: ['1'],
+  //   meta: {
+  //     title: '培训管理',
+  //     icon: 'skill',
+  //     roles: ['1']
+  //   },
+  //   children: [
+  //     {
+  //       path: 'train',
+  //       component: () => import('@/views/train/index'),
+  //       name: 'train',
+  //       meta: { title: '培训管理', icon: 'skill', roles: ['1'] }
+  //     }
+  //   ]
+  // },
 
   // 绩效管理
   {
     path: '/achievements',
     component: Layout,
     redirect: '/achievements/index',
-    roles: ['1'],
+    // roles: ['1'],
     meta: {
       title: '绩效管理',
+      roles: ['1', '2', '3', '4'],
       icon: 'star'
     },
     children: [
@@ -290,7 +296,13 @@ export const asyncRoutes = [
         path: 'achievements',
         component: () => import('@/views/achievements/index'),
         name: 'achievements',
-        meta: { title: '绩效管理', icon: 'star', roles: ['1'] }
+        meta: { title: '绩效管理', icon: 'star', roles: ['1', '2', '3'] }
+      },
+      {
+        path: 'staffAchievements',
+        component: () => import('@/views/achievements/staffAchievements'),
+        name: 'staffAchievements',
+        meta: { title: '查看绩效', icon: 'star', roles: ['4'] }
       }
     ]
   },
@@ -302,7 +314,7 @@ export const asyncRoutes = [
     redirect: '/wages/index',
     meta: {
       title: '薪酬管理',
-      roles: ['1', '2', '3'],
+      roles: ['1', '2', '3', '4'],
       icon: 'money'
     },
     children: [
@@ -310,13 +322,13 @@ export const asyncRoutes = [
         path: 'wages',
         component: () => import('@/views/wages/index'),
         name: 'wages',
-        meta: { title: '薪酬管理', icon: 'money', roles: ['1'] }
+        meta: { title: '薪酬管理', icon: 'money', roles: ['1', '2'] }
       },
       {
         path: 'staffWages',
         component: () => import('@/views/wages/staffWages'),
         name: 'staffWages',
-        meta: { title: '工资明细', noCache: true, roles: ['2'] }
+        meta: { title: '工资明细', noCache: true, roles: ['3', '4'] }
       }
     ]
   },
@@ -329,6 +341,7 @@ export const asyncRoutes = [
     redirect: '/department/index',
     meta: {
       title: '部门管理',
+      roles: ['1', '2', '3'],
       icon: 'component'
     },
     children: [
@@ -336,7 +349,7 @@ export const asyncRoutes = [
         path: 'department',
         component: () => import('@/views/department/index'),
         name: 'department',
-        meta: { title: '部门管理', icon: 'component', roles: ['1'] }
+        meta: { title: '部门管理', icon: 'component', roles: ['1', '2', '3'] }
       }
     ]
   },
@@ -349,7 +362,8 @@ export const asyncRoutes = [
     roles: ['1'],
     meta: {
       title: '权限管理',
-      icon: 'lock'
+      icon: 'lock',
+      roles: ['1']
     },
     children: [
       {
@@ -373,6 +387,10 @@ export const asyncRoutes = [
     path: '/users',
     component: Layout,
     redirect: '/users/index',
+    meta: {
+      title: '查看员工信息',
+      icon: 'peoples'
+    },
     children: [
       {
         path: 'users',
@@ -380,7 +398,18 @@ export const asyncRoutes = [
         name: 'users',
         meta: {
           title: '员工信息表',
-          icon: 'peoples'
+          icon: 'peoples',
+          roles: ['1', '2']
+        }
+      },
+      {
+        path: 'users',
+        component: () => import('@/views/users/staffUsers'),
+        name: 'staffUsers',
+        meta: {
+          title: '查看员工信息',
+          icon: 'peoples',
+          roles: ['3', '4', '5']
         }
       }
     ]

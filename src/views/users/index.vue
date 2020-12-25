@@ -399,8 +399,9 @@ export default {
     },
     getList() {
       this.listLoading = true
+      console.log(this.listQuery)
       usersList(this.listQuery).then(res => {
-        // console.log(res.data[1])
+        console.log(res.data[1])
         res.data.data.forEach(function(e) {
           // console.log(e.status)
           if (e.status === 1) {
@@ -590,13 +591,16 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['姓名']
+        const tHeader = ['工号', '姓名', '年龄', '性别', '部门', '职位', '权限']
+        // const tHeader = ['工号', '姓名']
         const filterVal = [
-          'name'
-          // 'title',
-          // 'type',
-          // 'importance',
-          // 'status'
+          'work_num',
+          'name',
+          'age',
+          'sex',
+          'department',
+          'position',
+          'roles'
         ]
         const data = this.formatJson(filterVal)
         excel.export_json_to_excel({
