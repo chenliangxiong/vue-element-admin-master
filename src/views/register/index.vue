@@ -38,15 +38,23 @@
           </el-col>
         </el-row>
         <el-form-item label="部门">
-          <el-select v-model="form.department" placeholder="请选择所在部门">
-            <el-option label="区域一" value="shanghai">你好</el-option>
-            <el-option label="区域二" value="beijing">你好</el-option>
+          <el-select v-model="form.department" placeholder="请选择">
+            <el-option
+              v-for="item in responseDepartment"
+              :key="item.department"
+              :label="item.department"
+              :value="item.department"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="职位">
-          <el-select v-model="form.position" placeholder="请选择你的职位">
-            <el-option label="区域一" value="shanghai">你好</el-option>
-            <el-option label="区域二" value="beijing">你好</el-option>
+          <el-select v-model="form.position" placeholder="请选择">
+            <el-option
+              v-for="item in responsePosition"
+              :key="item.position"
+              :label="item.position"
+              :value="item.position"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="简介">
@@ -69,7 +77,8 @@
 </template>
 
 <script>
-import { register } from '@/api/user'
+// import { register } from '@/api/user'
+import { departmentList, positionList } from '@/api/register'
 
 export default {
   data() {
@@ -87,48 +96,43 @@ export default {
         age: '',
         sex: '',
         position: '',
-        department: '',
+        department: [],
         introduction: ''
       },
+      responseDepartment: {},
+      responsePosition: {},
+      // department: '',
       registerRules: {
         job_num: [{ required: true, trigger: 'blur', validator: validateJobNum }]
       }
     }
   },
+  created() {
+    this.getOption()
+  },
   methods: {
+    getOption() {
+      departmentList().then(res => {
+        console.log(res.data)
+        this.responseDepartment = res.data
+        // res.data.forEach(function(item, index) {
+        //   this.form.department[index] = item.department
+        // })
+      })
+      positionList().then(res => {
+        console.log(res.data)
+        this.responsePosition = res.data
+      })
+    },
     handleRegister() {
-    // console.log(JSON.stringify(this.loginForm))
       this.$refs.form.validate(valid => {
-      // console.log(JSON.stringify(this.valid))
         if (valid) {
-          register({ form: this.form }).then(response => {
-            console.log('注册成功')
-            // data是利用api从后端获取的数据
-            // 从response中拿到data
-            // const { data } = response
-            // commit('SET_TOKEN', data.token)
-            // setToken(data.token)
-            // // console.log(data.token)
-            // // console.log(data.roles)
-
-            // resolve()
-          }).catch(error => {
-            console.log('没拿到response')
-            console.log(error)
-          })
-        // console.log(JSON.stringify(this.loginForm))
-          // this.loading = true
-          // this.$store.dispatch含有异步操作，例如向后台提交数据       第一步把值传给store里的login函数
-          // this.$store.dispatch('user/register', this.form)
-          //   .then(() => {
-          //   // 第三步！！
-          //     this.$router.push('/login')
-          //     this.loading = false
-          //   })
-          //   .catch(() => {
-          //     console.log('运行到这里')
-          //     this.loading = false
-          //   })
+          // register({ form: this.form }).then(response => {
+          //   console.log('注册成功')
+          // }).catch(error => {
+          //   console.log('没拿到response')
+          //   console.log(error)
+          // })
         } else {
           console.log('错误提交!!')
           return false
