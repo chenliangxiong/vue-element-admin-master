@@ -10,13 +10,13 @@
         <el-row>
           <el-col :span="12">
             <el-form-item aria-label="" label="工号">
-              <el-input v-model="form.job_num" name="job_num">你好</el-input>
+              <el-input v-model="form.work_num" nickname="work_num">你好</el-input>
             </el-form-item></el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item aria-label="" label="姓名">
-              <el-input v-model="form.name">你好</el-input>
+              <el-input v-model="form.nickname">你好</el-input>
             </el-form-item></el-col>
         </el-row>
         <el-row>
@@ -31,8 +31,8 @@
           <el-col :span="8">
             <el-form-item label="性别">
               <el-select v-model="form.sex" placeholder="男">
-                <el-option label="男" value="shanghai">男</el-option>
-                <el-option label="女" value="beijing">女</el-option>
+                <el-option label="男" value="男">男</el-option>
+                <el-option label="女" value="女">女</el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -59,7 +59,7 @@
         </el-form-item>
         <el-form-item label="简介">
           <el-input
-            v-model="form.introduction"
+            v-model="form.short_introduce"
             type="textarea"
             placeholder="你好，我是"
           >1</el-input>
@@ -78,7 +78,7 @@
 
 <script>
 // import { register } from '@/api/user'
-import { departmentList, positionList } from '@/api/register'
+import { departmentList, positionList, register } from '@/api/register'
 
 export default {
   data() {
@@ -91,19 +91,19 @@ export default {
     }
     return {
       form: {
-        job_num: '',
-        name: '',
+        work_num: '',
+        nickname: '',
         age: '',
         sex: '',
         position: '',
         department: [],
-        introduction: ''
+        short_introduce: ''
       },
       responseDepartment: {},
       responsePosition: {},
       // department: '',
       registerRules: {
-        job_num: [{ required: true, trigger: 'blur', validator: validateJobNum }]
+        work_num: [{ required: true, trigger: 'blur', validator: validateJobNum }]
       }
     }
   },
@@ -113,26 +113,28 @@ export default {
   methods: {
     getOption() {
       departmentList().then(res => {
-        console.log(res.data)
         this.responseDepartment = res.data
-        // res.data.forEach(function(item, index) {
-        //   this.form.department[index] = item.department
-        // })
       })
       positionList().then(res => {
-        console.log(res.data)
         this.responsePosition = res.data
       })
     },
     handleRegister() {
       this.$refs.form.validate(valid => {
+        console.log(this.form)
+
         if (valid) {
-          // register({ form: this.form }).then(response => {
-          //   console.log('注册成功')
-          // }).catch(error => {
-          //   console.log('没拿到response')
-          //   console.log(error)
-          // })
+          register({ form: this.form }).then(response => {
+            // console.log('注册成功')
+            this.$notify({
+              title: '成功',
+              message: '注册成功',
+              type: 'success'
+            })
+            this.$router.push({ path: '/login' })
+          }).catch(error => {
+            console.log(error)
+          })
         } else {
           console.log('错误提交!!')
           return false

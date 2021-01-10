@@ -149,12 +149,6 @@
           />
         </template>
       </el-table-column>
-      <!-- <el-table-column label="Readings" align="center" width="95">
-        <template slot-scope="{row}">
-          <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column> -->
       <el-table-column label="状态" class-name="status-col" min-width="80px">
         <template slot-scope="{ row }">
           <el-tag :type="row.status | statusFilter">
@@ -172,50 +166,13 @@
           <span style="color:red;">{{ row.reviewer }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column
-        label="操作"
-        align="center"
-        min-width="150px"
-        class-name="small-padding fixed-width"
-      > -->
-      <!-- <template slot-scope="{ row }">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            修改权限
-          </el-button>
-          <el-button
-            v-show="row.status == '已激活'"
-            size="mini"
-            type="success"
-            @click="handleModifyStatus(row, '已锁定')"
-          >
-            锁定
-          </el-button>
-          <el-button
-            v-show="row.status == '已锁定'"
-            size="mini"
-            type="success"
-            @click="handleModifyStatus(row, '已激活')"
-          >
-            解除锁定
-          </el-button> -->
-      <!-- <el-button
-            size="mini"
-            @click="handleModifyStatus(row, '未激活')"
-          >
-            取消激活
-          </el-button> -->
-      <!-- <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            删除
-          </el-button> -->
-      <!-- </template> -->
-      <!-- </el-table-column> -->
     </el-table>
 
     <!-- 修改 -->
 
     <pagination
       v-show="total > 0"
-      :page-sizes="[1,5,10, 200, 300, 400]"
+      :page-sizes="[1,5,10]"
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.list_rows"
@@ -231,22 +188,6 @@
         label-width="70px"
         style="width: 400px; margin-left:50px;"
       >
-        <!-- <el-form-item label="Type" prop="type">
-          <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Date" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
-        </el-form-item>
-        <el-form-item label="Title" prop="title">
-          <el-input v-model="temp.title" />
-        </el-form-item>
-        <el-form-item label="Status">
-          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
-          </el-select>
-        </el-form-item> -->
         <el-form-item label="权限">
           <el-rate
             v-model="temp.roles"
@@ -255,9 +196,6 @@
             style="margin-top:8px;"
           />
         </el-form-item>
-        <!-- <el-form-item label="Remark">
-          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
-        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
@@ -272,18 +210,6 @@
       </div>
     </el-dialog>
 
-    <!-- reading的链接 -->
-
-    <!-- <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
-      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="Channel" />
-        <el-table-column prop="pv" label="Pv" />
-      </el-table>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
-      </span>
-    </el-dialog> -->
-    <!-- </el-table> -->
   </div>
 </template>
 
@@ -298,10 +224,6 @@ import Pagination from '@/components/Pagination' // secondary package based on e
 const calendarTypeOptions = [
   { key: '经理', display_name: '经理层' },
   { key: '计算机部', display_name: '计算机部' }
-  // { key: 'CN', display_name: 'China' },
-  // { key: 'US', display_name: 'USA' },
-  // { key: 'JP', display_name: 'Japan' },
-  // { key: 'EU', display_name: 'Eurozone' }
 ]
 
 // arr to obj, such as { CN : "China", US : "USA" }

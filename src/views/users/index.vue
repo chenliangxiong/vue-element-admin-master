@@ -215,7 +215,7 @@
 
     <pagination
       v-show="total > 0"
-      :page-sizes="[1,5,10, 200, 300, 400]"
+      :page-sizes="[1,5,10]"
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.list_rows"
