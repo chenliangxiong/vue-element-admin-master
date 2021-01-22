@@ -76,7 +76,7 @@ const actions = {
           setWorkNum(data.work_num)
 
           // 在这里修改验证条件
-          const isAdmin = data.roles < 1
+          const isAdmin = data.roles < 3
           if (isAdmin) {
             reject('isAdmin')
           }

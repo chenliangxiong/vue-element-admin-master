@@ -77,6 +77,9 @@
       >
         下载
       </el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+        添加
+      </el-button>
       <el-checkbox
         v-model="showReviewer"
         class="filter-item"
@@ -195,12 +198,6 @@
           >
             不予通过
           </el-button>
-          <!-- <el-button
-            size="mini"
-            @click="handleModifyStatus(row, '未激活')"
-          >
-            取消激活
-          </el-button> -->
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
             删除记录
           </el-button>
@@ -217,49 +214,80 @@
     />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form
-        ref="dataForm"
-        :rules="rules"
-        :model="temp"
-        label-position="left"
-        label-width="70px"
-        style="width: 400px; margin-left:50px;"
-      >
-        <el-form-item label="权限">
-          <el-rate
-            v-model="temp.roles"
-            :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-            :max="5"
-            style="margin-top:8px;"
-          />
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
+
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="temp.name" />
         </el-form-item>
+
+        <el-form-item label="年龄" prop="age">
+          <el-input v-model="temp.age" />
+        </el-form-item>
+
+        <el-form-item label="性别" prop="sex">
+          <el-select v-model="temp.sex" class="filter-item" placeholder="请选择">
+            <el-option v-for="item in sexOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="申请的部门" prop="department">
+          <el-select v-model="temp.department" class="filter-item" placeholder="请选择">
+            <el-option v-for="item in departmentOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="申请的职位" prop="position">
+          <el-select v-model="temp.position" class="filter-item" placeholder="请选择">
+            <el-option v-for="item in positionOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="简介">
+          <el-input v-model="temp.detail" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入" />
+        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
           取消
         </el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus === 'create' ? createData() : updateData()"
-        >
+        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
           确定
         </el-button>
       </div>
     </el-dialog>
+
   </div>
 </template>
 
 <script>
-import { recruitList, updateRoles, updateStatus, submit } from '@/api/recruit'
+import { recruitList, updateRoles, updateStatus, submit, createRecruit } from '@/api/recruit'
+// import { createJob } from '@/api/new-job'
 import { fetchPv } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
+const sexOptions = [
+  { key: '计算机部', display_name: '普通员工' },
+  { key: '管理员', display_name: '管理员' }
+]
+
+const positionOptions = [
+  { key: '计算机部', display_name: '普通员工' },
+  { key: '管理员', display_name: '管理员' }
+]
+
+const departmentOptions = [
+  { key: '经理层', display_name: '经理层' },
+  { key: '计算机部', display_name: '计算机部' }
+]
+
 const calendarTypeOptions = [
   { key: '经理', display_name: '经理层' },
   { key: '计算机部', display_name: '计算机部' }
 ]
+
 const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
   acc[cur.key] = cur.display_name
   return acc
@@ -302,6 +330,9 @@ export default {
       },
       importanceOptions: ['管理员', '普通员工'],
       calendarTypeOptions,
+      sexOptions,
+      departmentOptions,
+      positionOptions,
       sortOptions: [
         { label: 'ID Ascending', key: '+id' },
         { label: 'ID Descending', key: '-id' }
@@ -327,19 +358,28 @@ export default {
       dialogPvVisible: false,
       pvData: [],
       rules: {
-        type: [
-          { required: true, message: 'type is required', trigger: 'change' }
+        department: [
+          { required: true, message: '您还未选择部门', trigger: 'change' }
         ],
-        timestamp: [
-          {
-            type: 'date',
-            required: true,
-            message: 'timestamp is required',
-            trigger: 'change'
-          }
+        position: [
+          { required: true, message: '您还未选择职位', trigger: 'change' }
         ],
-        title: [
-          { required: true, message: 'title is required', trigger: 'blur' }
+        // timestamp: [
+        //   {
+        //     type: 'date',
+        //     required: true,
+        //     message: 'timestamp is required',
+        //     trigger: 'change'
+        //   }
+        // ],
+        name: [
+          { required: true, message: '此处不能为空', trigger: 'blur' }
+        ],
+        age: [
+          { required: true, message: '此处不能为空', trigger: 'blur' }
+        ],
+        sex: [
+          { required: true, message: '此处不能为空', trigger: 'blur' }
         ]
       },
       downloadLoading: false
@@ -377,6 +417,42 @@ export default {
           this.listLoading = false
         }, 0.5 * 1000)
       })
+    },
+    handleCreate() {
+      this.resetTemp()
+      this.dialogStatus = 'create'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+
+    createData() {
+      const tempData = Object.assign({}, this.temp)
+      console.log(tempData)
+
+      this.$refs.dataForm.validate((valid) => {
+        if (valid) {
+          createRecruit(tempData).then(() => {
+            this.getList()
+            this.list.unshift(this.temp)
+            this.dialogFormVisible = false
+            this.$notify({
+              title: 'Success',
+              message: '添加部门成功',
+              type: 'success',
+              duration: 2000
+            })
+          })
+          // alert('submit!');
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields()
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -416,33 +492,43 @@ export default {
     },
     resetTemp() {
       this.temp = {
-        work_num: undefined,
-        importance: 1,
+        // work_num: undefined,
+        // importance: 1,
         name: '',
         age: '',
         sex: '',
         position: '',
         department: '',
+        detail: ''
 
         // timestamp: new Date(),
-        status: 'published',
-        type: ''
+        // status: 'published',
+        // type: ''
       }
     },
     handleSubmit(row) {
       console.log(row)
       // tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-      submit(row).then(() => {
-        this.getList()
 
-        const index = this.list.findIndex(v => v.id === this.temp.id)
-        this.list.splice(index, 1, this.temp)
-        this.dialogFormVisible = false
-        this.$notify({
-          title: 'Success',
-          message: '修改权限成功',
+      this.$confirm('确认要提交吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        submit(row).then(() => {
+          this.getList()
+          const index = this.list.findIndex(v => v.id === this.temp.id)
+          this.list.splice(index, 1, this.temp)
+          this.dialogFormVisible = false
+        })
+        this.$message({
           type: 'success',
-          duration: 2000
+          message: '提交成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消提交'
         })
       })
 

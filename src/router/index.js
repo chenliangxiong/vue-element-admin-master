@@ -248,13 +248,19 @@ export const asyncRoutes = [
         path: 'recruit',
         component: () => import('@/views/recruit/index'),
         name: 'recruit',
-        meta: { title: '招聘管理', icon: 'people', roles: ['1', '2'] }
+        meta: { title: '竞聘的人', icon: 'example', roles: ['1', '2'] }
+      },
+      {
+        path: 'new_job',
+        component: () => import('@/views/recruit/new_job'),
+        name: 'recruit',
+        meta: { title: '发布招聘', icon: 'edit', roles: ['1', '2'] }
       }
       // {
-      //   path: 'staff_recruit',
-      //   component: () => import('@/views/recruit/staff_recruit'),
+      //   path: 'job_list',
+      //   component: () => import('@/views/recruit/job_list'),
       //   name: 'recruit',
-      //   meta: { title: '招聘管理', icon: 'people', roles: ['2'] }
+      //   meta: { title: '工作列表', icon: 'list', roles: ['1', '2'] }
       // }
     ]
   },
